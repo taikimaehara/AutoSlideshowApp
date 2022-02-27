@@ -60,14 +60,14 @@ class MainActivity : AppCompatActivity() {
 
         button_play_stop.setOnClickListener {
             //再生/停止ボタン押された場合
-            when(mSlideshowStatus) {
+            when (mSlideshowStatus) {
                 0 -> {
                     //停止->再生
-                    if(mumap.size == 0){
+                    if (mumap.size == 0) {
                         Toast.makeText(this, "画像がありません", Toast.LENGTH_SHORT).show()
                     } else {
                         mSlideshowStatus = 1
-                        button_play_stop.text="停止"
+                        button_play_stop.text = "停止"
                         button_forward.isEnabled = false
                         button_back.isEnabled = false
                         if (mSlideshowTimer == null) {
@@ -80,14 +80,14 @@ class MainActivity : AppCompatActivity() {
                                         changeImageView(0)
                                     }
                                 }
-                            }, 2000,2000)
+                            }, 2000, 2000)
                         }
                     }
                 }
                 1 -> {
                     //再生->停止
                     mSlideshowStatus = 0
-                    button_play_stop.text="再生"
+                    button_play_stop.text = "再生"
                     button_forward.isEnabled = true
                     button_back.isEnabled = true
                     if (mSlideshowTimer != null) {
@@ -100,7 +100,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permission: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permission: Array<String>,
+        grantResults: IntArray
+    ) {
         when (requestCode) {
             PERMISSIONS_REQUEST_CODE ->
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -111,20 +115,20 @@ class MainActivity : AppCompatActivity() {
 
     //画像の切り替え
     //direction(0:進む 1:戻る)
-    private fun changeImageView(direction: Int){
-        if(mumap.size == 0){
+    private fun changeImageView(direction: Int) {
+        if (mumap.size == 0) {
             Toast.makeText(this, "画像がありません", Toast.LENGTH_SHORT).show()
         } else {
-            when(direction) {
+            when (direction) {
                 0 -> {
                     imageViewIndex++
-                    if(mumap.size <= imageViewIndex) {
+                    if (mumap.size <= imageViewIndex) {
                         imageViewIndex = 0
                     }
                 }
                 1 -> {
                     imageViewIndex--
-                    if(imageViewIndex < 0){
+                    if (imageViewIndex < 0) {
                         imageViewIndex = mumap.size - 1
                     }
                 }
@@ -153,19 +157,20 @@ class MainActivity : AppCompatActivity() {
                 // indexからIDを取得し、そのIDから画像のURIを取得
                 val fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID)
                 val id = cursor.getLong(fieldIndex)
-                val imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+                val imageUri =
+                    ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
 
                 mumap.put(cnt, imageUri)
                 cnt++
 
-                Log.d("test",mumap.toString())
+                Log.d("test", mumap.toString())
 
             } while (cursor!!.moveToNext())
         }
         cursor.close()
 
-        if(mumap != null){
-            if(mumap.size == 0){
+        if (mumap != null) {
+            if (mumap.size == 0) {
                 Toast.makeText(this, "画像がありません", Toast.LENGTH_SHORT).show()
             }
             imageView.setImageURI(mumap.get(imageViewIndex))
